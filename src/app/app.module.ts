@@ -2,6 +2,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule, Component,ErrorHandler } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from "@angular/router";
+import { Test01Component } from './test-01';
 
 @Component({
     selector : 'app-root',
@@ -12,7 +13,8 @@ export class AppComponent {}
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    Test01Component
   ],
   imports: [
     BrowserModule,
