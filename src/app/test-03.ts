@@ -15,23 +15,12 @@
 import { Component, NgModule  } from '@angular/core';
 import { RouterModule } from "@angular/router";
 import { CommonModule } from '@angular/common';
-import { FormsModule, NgForm } from '@angular/forms';
+import { FormsModule } from '@angular/forms';
 
 
 @Component({
     selector : 'ng-app',
-    // template : `<form #signinForm="ngForm" (ngSubmit)="submittheForm(signinForm)" novalidate>
-    //                 <h2>Login</h2>
-    //                 <br/>
-    //                 <input type="email" ngModel #email="ngModel" value="" name="email" />
-    //                 <br/>
-    //                 <em class="error">{{email_error}}</em>
-    //                 <input type="password" value="" name="password" ngModel #password="ngModel"/>
-    //                 <em class="error">{{password_error}}</em>
-    //                 <button type="submit">Submit</button>
-    //                 <br/><br/>
-    //                 <div *ngIf="logged_in">Logged In!</div>
-    //             </form>`,
+
     template : `<form (submit)="submittheForm($event)" novalidate>
                     <h2>Login</h2>
                     <br/>

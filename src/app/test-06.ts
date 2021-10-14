@@ -53,6 +53,8 @@ At https://wallethub.com <b>bolded text</b>`;
         this.review_content = this.review_input;
     }
 
+    
+
 }
 
 @NgModule({

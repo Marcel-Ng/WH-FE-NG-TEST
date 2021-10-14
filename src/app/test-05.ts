@@ -4,7 +4,7 @@
  * * Spot the memory leak
  * 
  */
-import { Component, NgModule, Injectable, Input  } from '@angular/core';
+import { Component, NgModule, Injectable, Input, OnInit, AfterViewInit  } from '@angular/core';
 import { RouterModule, Router} from "@angular/router";
 import { CommonModule } from '@angular/common';
 import { BehaviorSubject } from 'rxjs';
@@ -53,7 +53,7 @@ export class MainComponent {
     template : `Sample Child component<br/> <button (click)="Next()">next test</button>`
     
 })
-export class TextChildComponent {
+export class TextChildComponent implements AfterViewInit {
     
     @Input('skip-current') skip = false;
 
@@ -65,8 +65,11 @@ export class TextChildComponent {
         this._router.navigate(["test-six"]);
     }
 
+    
     ngAfterViewInit() {
-        if(this.skip) this._srv.SetTest("angular test #6");
+        setTimeout(()=>{
+            if(this.skip) this._srv.SetTest("angular test #6");
+        })
     }
 
 }
