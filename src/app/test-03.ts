@@ -15,31 +15,81 @@
 import { Component, NgModule  } from '@angular/core';
 import { RouterModule } from "@angular/router";
 import { CommonModule } from '@angular/common';
+import { FormsModule, NgForm } from '@angular/forms';
+
 
 @Component({
     selector : 'ng-app',
-    template : `<form>
+    // template : `<form #signinForm="ngForm" (ngSubmit)="submittheForm(signinForm)" novalidate>
+    //                 <h2>Login</h2>
+    //                 <br/>
+    //                 <input type="email" ngModel #email="ngModel" value="" name="email" />
+    //                 <br/>
+    //                 <em class="error">{{email_error}}</em>
+    //                 <input type="password" value="" name="password" ngModel #password="ngModel"/>
+    //                 <em class="error">{{password_error}}</em>
+    //                 <button type="submit">Submit</button>
+    //                 <br/><br/>
+    //                 <div *ngIf="logged_in">Logged In!</div>
+    //             </form>`,
+    template : `<form (submit)="submittheForm($event)" novalidate>
                     <h2>Login</h2>
                     <br/>
-                    <input type="email" value="" name="email" />
+                    <input type="email" [(ngModel)]="email" value="" name="email" />
                     <br/>
-                    <input type="password" value="" name="password" />
+                    <em class="error">{{email_error}}</em>
+                    <input type="password" value="" name="password" [(ngModel)]="password"/>
+                    <em class="error">{{password_error}}</em>
                     <button type="submit">Submit</button>
                     <br/><br/>
                     <div *ngIf="logged_in">Logged In!</div>
-                </form>`
+                </form>`,
+    styles: ['.error { color: red; display: block }']
 })
 export class Test03Component {
 
     email:string = "";
     password:string = "";
+    logged_in:boolean = false;
+    password_error: string = '';
+    email_error: string = '';
 
-    logged_in = false;
+    private isEmail(email:string): boolean{
+        const mailformat = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+        if(email.match(mailformat)){
+            this.email_error = '';
+            return true;
+        }
+        this.email_error = 'Please Enter valid email';
+        return false;
+    }
+
+    private passwordIsStrong(password: string): boolean{
+        const password_format = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})/;
+        if(password.match(password_format)){
+            this.password_error = '';
+            return true;
+        }
+        this.password_error = 'Please Enter strong password';
+        return false;
+    }
+
+    public submittheForm(form: any){
+        form.preventDefault();
+        if(this.isEmail(this.email) && this.passwordIsStrong(this.password)){
+            this.logged_in = true;
+        }else{
+            this.logged_in = false;
+        }
+    }
+
+
 }
 
 @NgModule({
     imports : [
         CommonModule,
+        FormsModule,
         RouterModule.forChild([
             {
                 path : "",
