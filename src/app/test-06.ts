@@ -8,16 +8,18 @@
 import { Component, NgModule  } from '@angular/core';
 import { RouterModule} from "@angular/router";
 import { CommonModule } from '@angular/common';
+import { ReactiveFormsModule, FormControl } from "@angular/forms";
 
 
 @Component({
     selector : 'ng-app',
     template : `
                 <h2>User Review:</h2>
-                <textarea class="textfield" placeholder="Write your Review" [value]="review_input"></textarea>
+                <textarea class="textfield" placeholder="Write your Review" [formControl]="review_input" ></textarea>
                 <br/><br/>
                 <h3>Output:</h3>
-                <div class="output" [innerHTML]="review_content"></div>
+                <div class="output" [innerText]="review_content"></div>
+
                 `,
     styles : [
         `.textfield {
@@ -32,12 +34,13 @@ import { CommonModule } from '@angular/common';
             border: solid 1px #f9f6f6;
             padding: 5px;
             background: #ecebeb; 
+            white-space: pre-wrap;
         }`
     ]
 })
 export class ReviewComponent {
     // sample input
-    review_input = 
+    initial_input = 
 `Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
 Maecenas tincidunt vestibulum ligula, sed viverra erat tempus nec. 
 
@@ -47,19 +50,37 @@ Pellentesque blandit mauris congue elit eleifend, facilisis tristique dolor dict
           
 At https://wallethub.com <b>bolded text</b>`;
 
+    review_input = new FormControl(this.initial_input);
+
     review_content = "";
 
     ngOnInit() {
-        this.review_content = this.review_input;
+        this.review_content = this.printReview(this.review_input.value);
+        this.onReviewChanged();
     }
 
-    
+    onReviewChanged(): void{
+        this.review_input.valueChanges.subscribe(val => {
+            this.review_content = this.printReview(this.review_input.value)
+        })
+    }
+
+    printReview(text: string): string{
+        const exp_match = /(\b(https?|):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig;
+        const element_content=text.replace(exp_match, "<a href='$1'>$1</a>");
+        const new_exp_match =/(^|[^\/])(www\.[\S]+(\b|$))/gim;
+        const new_content=element_content.replace(new_exp_match, '$1<a target="_blank" href="http://$2">$2</a>');
+        return new_content;
+    }
+
+
 
 }
 
 @NgModule({
     imports : [
         CommonModule,
+        ReactiveFormsModule,
         RouterModule.forChild([
             {
                 path : "",
